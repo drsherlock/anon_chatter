@@ -1,4 +1,8 @@
-const constants = require('./constants');
+try {
+  const constants = require('./constants');
+} catch (ex) {
+  const constants = '';
+}
 
 const environment = 'production'; // local, production
 
