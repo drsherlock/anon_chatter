@@ -16,7 +16,7 @@ $(document).ready(function(){
 		const message = $("#message").val();
 		$("#message").val("");
 		//send message
-		$.post( "http://localhost:5000/message", { message } );
+		$.post( "/message", { message } );
 	});
 
 	function onMessageAdded(data) {

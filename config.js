@@ -1,7 +1,7 @@
 try {
-  const constants = require('./constants');
-} catch (ex) {
-  const constants = '';
+  var constants = require('./constants');
+} catch(err) {
+
 }
 
 const environment = 'production'; // local, production
