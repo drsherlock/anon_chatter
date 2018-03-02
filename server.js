@@ -22,13 +22,17 @@ app.post('/message', function(req, res) {
   res.sendStatus(200);
 });
 
+app.get('/chat', function(req, res) {
+  res.sendFile('/public/html/chat.html', {root: __dirname });
+});
+
 app.get('/', function(req, res) {
-  res.sendFile('/public/index.html', {root: __dirname });
+  res.sendFile('/public/html/index.html', {root: __dirname });
 });
 
 app.use(express.static(__dirname + '/public'));
 
 var port = process.env.PORT || 5000;
 app.listen(port, function () {
-  console.log(`app listening on port ${port}!`)
+  console.log(`app listening on port ${port}!`);
 });
