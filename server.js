@@ -20,24 +20,36 @@ var pusher = new Pusher({
   encrypted: false
 });
 
+let onlineMembers = new Set();
+
 app.post('/message', function(req, res) {
   var message = req.body.message;
-  var socketId = req.body.socketId;
-  pusher.trigger( 'public-chat', 'message-added', { message }, socketId);
+  var userDisplayName = req.body.userDisplayName;
+  var userPhotoURL = req.body.userPhotoURL;
+
+  pusher.trigger( 'public-chat', 'message-added', { message, userDisplayName, userPhotoURL });
   res.sendStatus(200);
 });
 
 app.post('/member-joined', function(req, res) {
-  var displayName = req.body.displayName;
-  var socketId = req.body.socketId;
-  pusher.trigger( 'public-chat', 'member-joined', { displayName }, socketId);
+  var userDisplayName = req.body.userDisplayName;
+  var userPhotoURL = req.body.userPhotoURL;
+
+  onlineMembers.add(userDisplayName);
+  var onlineMembersArray = Array.from(onlineMembers);
+  
+  pusher.trigger( 'public-chat', 'member-joined', { userDisplayName, userPhotoURL, onlineMembersArray });
   res.sendStatus(200);
 });
 
 app.post('/member-left', function(req, res) {
-  var displayName = req.body.displayName;
-  var socketId = req.body.socketId;
-  pusher.trigger( 'public-chat', 'member-left', { displayName }, socketId);
+  var userDisplayName = req.body.userDisplayName;
+  var userPhotoURL = req.body.userPhotoURL;
+
+  onlineMembers.delete(userDisplayName);
+  var onlineMembersArray = Array.from(onlineMembers);
+  
+  pusher.trigger( 'public-chat', 'member-left', { userDisplayName, userPhotoURL, onlineMembersArray });
   res.sendStatus(200);
 });
 

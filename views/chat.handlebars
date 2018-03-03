@@ -50,20 +50,32 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-2 col-lg-2">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Online Anons
+                </div>
+                <div class="panel-body body-panel">
+                    <ul id="avail-members">
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 <script id="new-message" type="text/template">
-        <li class="left clearfix">
-          <span class="chat-img pull-left">
-            <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
-          </span>
-          <div class="chat-body clearfix">
+    <li class="left clearfix <%classes%>">
+        <span class="chat-img pull-left">
+            <img src="<%source%>" alt="User Avatar" class="user-avatar img-circle" />
+        </span>
+        <div class="chat-body clearfix">
             <p>
-              <%body%>
+                <%chat-body%>
             </p>
-          </div>
-        </li>
-      </script>
+        </div>
+    </li>
+</script>
 
 <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
 <script src="/js/chat.js"></script>

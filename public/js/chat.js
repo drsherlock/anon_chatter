@@ -6,41 +6,65 @@ $(document).ready(function () {
 	});
 
 	let channel = pusher.subscribe('public-chat');
-	var socketId = null;
-	pusher.connection.bind('connected', function() {
-		socketId = pusher.connection.socket_id;
-	});
+	
+	pusher.connection.bind('connected', function() {});
 
 	channel.bind('message-added', onMessageAdded);
 	channel.bind('member-joined', onMemberJoined);
 	channel.bind('member-left', onMemberLeft);
 
-	$('#btn-chat').click(function () {
+	var sendMsgButton = document.getElementById("btn-chat");
+	sendMsgButton.addEventListener("click", function () {
 		const message = $("#message").val();
+		if(message === "") {
+			return;
+		}
 		$("#message").val("");
+
 		//send message
-		$.post("/message", { message, socketId });
+		$.post("/message", { message, userDisplayName, userPhotoURL });
 	});
 
 	function onMessageAdded(data) {
 		let template = $("#new-message").html();
-		template = template.replace("<%body%>", data.message);
+		if(data.userDisplayName !== userDisplayName) {
+			template = template.replace("<%chat-body%>", data.message).replace("<%source%>", data.userPhotoURL).replace("<%classes%>", "member-msg");
+
+			spawnNotification("You have got a new message", "Anon-Chatter");
+		}
+		else if(data.userDisplayName === userDisplayName) {
+			template = template.replace("<%chat-body%>", data.message).replace("<%source%>", data.userPhotoURL).replace("<%classes%>", "user-msg");
+		}
 		$(".chat").append(template);
-		spawnNotification("You have got a new message", "Anon-Chatter");
 	}
 
 	function onMemberJoined(data) {
-		let template = $("#new-message").html();
-		template = template.replace("<%body%>", data.displayName+" just joined!");
-		$(".chat").append(template);
-		spawnNotification("You have got a mate", "Anon-Chatter");
+		console.log(data);
+		if(data.userDisplayName !== userDisplayName) {
+			let template = $("#new-message").html();
+			template = template.replace("<%chat-body%>", data.userDisplayName+" just joined!").replace("<%source%>", data.userPhotoURL).replace("<%classes%>", "member-status");
+			$(".chat").append(template);
+
+			spawnNotification("You have got a mate", "Anon-Chatter");
+		}
+		else if(data.userDisplayName === userDisplayName) {
+
+		}
+		updateOnlineMembersPanel(data.onlineMembersArray);		
 	}
 
 	function onMemberLeft(data) {
-		let template = $("#new-message").html();
-		template = template.replace("<%body%>", data.displayName+" just left!");
-		$(".chat").append(template);
-		spawnNotification("You have got a deserter", "Anon-Chatter");
+		if(data.userDisplayName !== userDisplayName) {
+			let template = $("#new-message").html();
+			template = template.replace("<%chat-body%>", data.userDisplayName+" just left!").replace("<%source%>", data.userPhotoURL).replace("<%classes%>", "member-status");
+			$(".chat").append(template);
+
+			spawnNotification("You have got a deserter", "Anon-Chatter");
+		}
+		else if(data.userDisplayName === userDisplayName) {
+			
+		}
+		updateOnlineMembersPanel(data.onlineMembersArray);
 	}
 
 	function spawnNotification(body, title) {
@@ -50,6 +74,16 @@ $(document).ready(function () {
 		var n = new Notification(title, options);
 	}
 
+	function updateOnlineMembersPanel(onlineMembersArray) {
+		let onlineMembersHTML = "";
+		for(let i = 0; i < onlineMembersArray.length; i++) {
+			onlineMembersHTML += "<li>"+onlineMembersArray[i]+"</li>";
+		}
+		$('#avail-members').html(onlineMembersHTML);
+	}
+
+	let userPhotoURL = "";
+	let userDisplayName = "";
 	firebase.auth().onAuthStateChanged(function (user) {
 		if (user) {
 			// User is signed in.
@@ -61,8 +95,11 @@ $(document).ready(function () {
 			var phoneNumber = user.phoneNumber;
 			var providerData = user.providerData;
 			user.getIdToken().then(function (accessToken) {});
-			
-			$.post("/member-joined", { displayName, socketId });
+
+			userPhotoURL = photoURL;
+			userDisplayName = displayName;
+
+			$.post("/member-joined", { userDisplayName, userPhotoURL });
 		} else {
 			// User is signed out.
 			window.location.replace("/");
@@ -73,10 +110,9 @@ $(document).ready(function () {
 
 	var signOutButton = document.getElementById("sign-out-btn");
 	signOutButton.addEventListener("click", function () {
-		var displayName = firebase.auth().currentUser.displayName;
 		firebase.auth().signOut().then(function () {
 			// Sign-out successful.
-			$.post("/member-left", { displayName, socketId });
+			$.post("/member-left", { userDisplayName, userPhotoURL });
 		}).catch(function (error) {
 			// An error happened.
 		});
