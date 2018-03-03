@@ -1,12 +1,16 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var Pusher = require('pusher');
+var exphbs  = require('express-handlebars');
 
 const config = require('./config');
 
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 var pusher = new Pusher({
   appId: '477484',
@@ -18,16 +22,31 @@ var pusher = new Pusher({
 
 app.post('/message', function(req, res) {
   var message = req.body.message;
-  pusher.trigger( 'public-chat', 'message-added', { message });
+  var socketId = req.body.socketId;
+  pusher.trigger( 'public-chat', 'message-added', { message }, socketId);
+  res.sendStatus(200);
+});
+
+app.post('/member-joined', function(req, res) {
+  var displayName = req.body.displayName;
+  var socketId = req.body.socketId;
+  pusher.trigger( 'public-chat', 'member-joined', { displayName }, socketId);
+  res.sendStatus(200);
+});
+
+app.post('/member-left', function(req, res) {
+  var displayName = req.body.displayName;
+  var socketId = req.body.socketId;
+  pusher.trigger( 'public-chat', 'member-left', { displayName }, socketId);
   res.sendStatus(200);
 });
 
 app.get('/chat', function(req, res) {
-  res.sendFile('/public/html/chat.html', {root: __dirname });
+  res.render('chat', {root: __dirname });
 });
 
 app.get('/', function(req, res) {
-  res.sendFile('/public/html/index.html', {root: __dirname });
+  res.render('index', {root: __dirname });
 });
 
 app.use(express.static(__dirname + '/public'));

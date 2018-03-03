@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="row form-group">
+        <div class="col-xs-12 col-md-offset-2 col-md-8 col-lg-8 col-lg-offset-2">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-comment"></span> Anon Chatter
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </button>
+                        <ul class="dropdown-menu slidedown">
+                            <li>
+                                <a href="">
+                                    <span class="glyphicon glyphicon-refresh">
+                                    </span>Refresh</a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    <span class="glyphicon glyphicon-ok-sign">
+                                    </span>Available</a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    <span class="glyphicon glyphicon-remove">
+                                    </span>Busy</a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    <span class="glyphicon glyphicon-time"></span>
+                                    Away</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li id="sign-out-btn">
+                                <a href="">
+                                    <span class="glyphicon glyphicon-off"></span>
+                                    Sign Out</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-body body-panel">
+                    <ul class="chat">
+                    </ul>
+                </div>
+                <div class="panel-footer clearfix">
+                    <textarea id="message" class="form-control" rows="3"></textarea>
+                    <span class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-12" style="margin-top: 10px">
+                        <button class="btn btn-warning btn-lg btn-block" id="btn-chat">Send</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="new-message" type="text/template">
+        <li class="left clearfix">
+          <span class="chat-img pull-left">
+            <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+          </span>
+          <div class="chat-body clearfix">
+            <p>
+              <%body%>
+            </p>
+          </div>
+        </li>
+      </script>
+
+<script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+<script src="/js/chat.js"></script>
