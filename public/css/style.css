@@ -25,6 +25,12 @@
   background-color: #9aea22;
 }
 
+#avail-members {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
 .chat li.left .chat-body
 {
   margin-left: 60px;
@@ -70,4 +76,12 @@
 .user-avatar 
 {
   width: 28px;
+}
+
+.margin-left-10 {
+  margin-left: 10px;
+}
+
+.margin-bottom-5 {
+  margin-bottom: 5px;
 }

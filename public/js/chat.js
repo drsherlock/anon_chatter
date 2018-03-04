@@ -77,7 +77,8 @@ $(document).ready(function () {
 	function updateOnlineMembersPanel(onlineMembersArray) {
 		let onlineMembersHTML = "";
 		for(let i = 0; i < onlineMembersArray.length; i++) {
-			onlineMembersHTML += "<li>"+onlineMembersArray[i]+"</li>";
+			let member = JSON.parse(onlineMembersArray[i]);
+			onlineMembersHTML += "<li class='margin-bottom-5'><img src='"+member.userPhotoURL+"'class='user-avatar img-circle' /><span class='margin-left-10'>"+member.userDisplayName+"</span></li>";
 		}
 		$('#avail-members').html(onlineMembersHTML);
 	}

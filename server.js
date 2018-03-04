@@ -35,7 +35,7 @@ app.post('/member-joined', function(req, res) {
   var userDisplayName = req.body.userDisplayName;
   var userPhotoURL = req.body.userPhotoURL;
 
-  onlineMembers.add(userDisplayName);
+  onlineMembers.add(JSON.stringify({userDisplayName, userPhotoURL}));
   var onlineMembersArray = Array.from(onlineMembers);
   
   pusher.trigger( 'public-chat', 'member-joined', { userDisplayName, userPhotoURL, onlineMembersArray });
@@ -46,7 +46,7 @@ app.post('/member-left', function(req, res) {
   var userDisplayName = req.body.userDisplayName;
   var userPhotoURL = req.body.userPhotoURL;
 
-  onlineMembers.delete(userDisplayName);
+  onlineMembers.delete({userDisplayName, userPhotoURL});
   var onlineMembersArray = Array.from(onlineMembers);
   
   pusher.trigger( 'public-chat', 'member-left', { userDisplayName, userPhotoURL, onlineMembersArray });
