@@ -4,7 +4,7 @@ try {
 
 }
 
-const environment = 'local'; // local, production
+const environment = 'production'; // local, production
 
 module.exports = (function() {
   if(environment === 'production') {
